@@ -23,7 +23,11 @@ const App: React.FC = () => {
   const isMobile = useDevice(); // 📌 Detectamos si es móvil o PC
 
   useEffect(() => {
-    axios.get("https://jcancelo.dev/api/get_peliculas.php")
+    const API_BASE_URL = window.location.protocol === "https:" 
+  ? "https://jcancelo.dev/api/get_peliculas.php" 
+  : "http://jcancelo.dev/api/get_peliculas.php";
+
+axios.get(API_BASE_URL)
       .then(response => setMovies(response.data.data || []))
       .catch(() => console.error("❌ Error cargando películas"));
   }, []);
