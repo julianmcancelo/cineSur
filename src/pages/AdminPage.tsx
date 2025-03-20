@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { FaFilm, FaUserCog } from "react-icons/fa"; // 📌 Solo dejamos los iconos necesarios
 
 const AdminPage: React.FC = () => {
   return (
