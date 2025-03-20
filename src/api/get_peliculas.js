@@ -2,22 +2,22 @@ import mysql from "mysql2/promise";
 
 export default async function handler(req, res) {
   try {
-    // 📌 Conectar a MySQL
+    // 📌 Conectar a MySQL usando variables de entorno
     const connection = await mysql.createConnection({
-      host: "167.250.5.55",  // 🔹 O la IP de tu servidor MySQL
-      user: "jcancelo_github",
-      password: "feelthesky1",
-      database: "jcancelo_cinesur"
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME
     });
 
-    // 📌 Ejecutar la consulta
+    // 📌 Ejecutar la consulta SQL
     const [rows] = await connection.execute("SELECT * FROM peliculas");
-
-    // 📌 Enviar los datos en formato JSON
-    res.status(200).json({ success: true, data: rows });
 
     // 📌 Cerrar la conexión
     await connection.end();
+
+    // 📌 Responder con los datos
+    res.status(200).json({ success: true, data: rows });
 
   } catch (error) {
     console.error("❌ Error en la API:", error);
