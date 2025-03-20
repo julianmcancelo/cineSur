@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // 📌 Para redirigir después de éxito
 
 const MovieForm: React.FC = () => {
+  const navigate = useNavigate(); // ✅ Redirigir después de agregar película
   const [formData, setFormData] = useState({
     titulo: "",
     anio: "",
@@ -12,6 +14,7 @@ const MovieForm: React.FC = () => {
 
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // 📌 Manejar cambios en los inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -30,19 +33,29 @@ const MovieForm: React.FC = () => {
       return;
     }
 
-    try {
-      const response = await axios.post("https://cinesur.vercel.app/api/add_pelicula.php", formData)
-      
+    setLoading(true); // ✅ Mostrar estado de carga
 
-      setMensaje(response.data.message || "✅ Película agregada correctamente.");
-      setFormData({ titulo: "", anio: "", imagen: "", video: "", sinopsis: "" }); // Limpiar formulario
+    try {
+      const response = await axios.post("https://jcancelo.dev/api/add_pelicula.php", formData);
+      
+      if (response.data.success) {
+        setMensaje("✅ Película agregada correctamente.");
+        setTimeout(() => navigate("/admin"), 1500); // 🔄 Redirigir después de éxito
+        setFormData({ titulo: "", anio: "", imagen: "", video: "", sinopsis: "" }); // Limpiar formulario
+      } else {
+        setMensaje("❌ Error al agregar la película: " + response.data.error);
+        setError(true);
+      }
     } catch (error) {
-      setMensaje("❌ Error al agregar la película.");
+      setMensaje("❌ No se pudo conectar con el servidor.");
+      setError(true);
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-900 p-6">
       <div className="max-w-3xl w-full bg-white p-8 rounded-xl shadow-lg border border-gray-200">
         <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">🎬 Agregar Nueva Película</h2>
 
@@ -59,7 +72,7 @@ const MovieForm: React.FC = () => {
               name="titulo"
               value={formData.titulo}
               onChange={handleChange}
-              className={`w-full p-3 bg-gray-100 border ${error && !formData.titulo ? "border-red-500" : "border-gray-300"} rounded-lg focus:ring-red-500 focus:border-red-500`}
+              className="w-full p-3 bg-gray-100 border rounded-lg focus:ring-red-500 focus:border-red-500"
               placeholder="Ejemplo: El Padrino"
             />
           </div>
@@ -72,7 +85,7 @@ const MovieForm: React.FC = () => {
               name="anio"
               value={formData.anio}
               onChange={handleChange}
-              className={`w-full p-3 bg-gray-100 border ${error && !formData.anio ? "border-red-500" : "border-gray-300"} rounded-lg focus:ring-red-500 focus:border-red-500`}
+              className="w-full p-3 bg-gray-100 border rounded-lg focus:ring-red-500 focus:border-red-500"
               placeholder="Ejemplo: 1972"
             />
           </div>
@@ -85,7 +98,7 @@ const MovieForm: React.FC = () => {
               name="imagen"
               value={formData.imagen}
               onChange={handleChange}
-              className={`w-full p-3 bg-gray-100 border ${error && !formData.imagen ? "border-red-500" : "border-gray-300"} rounded-lg focus:ring-red-500 focus:border-red-500`}
+              className="w-full p-3 bg-gray-100 border rounded-lg focus:ring-red-500 focus:border-red-500"
               placeholder="Ejemplo: https://example.com/poster.jpg"
             />
           </div>
@@ -98,7 +111,7 @@ const MovieForm: React.FC = () => {
               name="video"
               value={formData.video}
               onChange={handleChange}
-              className={`w-full p-3 bg-gray-100 border ${error && !formData.video ? "border-red-500" : "border-gray-300"} rounded-lg focus:ring-red-500 focus:border-red-500`}
+              className="w-full p-3 bg-gray-100 border rounded-lg focus:ring-red-500 focus:border-red-500"
               placeholder="Ejemplo: https://www.youtube.com/watch?v=XXXXX"
             />
           </div>
@@ -111,7 +124,7 @@ const MovieForm: React.FC = () => {
               value={formData.sinopsis}
               onChange={handleChange}
               rows={4}
-              className={`w-full p-3 bg-gray-100 border ${error && !formData.sinopsis ? "border-red-500" : "border-gray-300"} rounded-lg focus:ring-red-500 focus:border-red-500`}
+              className="w-full p-3 bg-gray-100 border rounded-lg focus:ring-red-500 focus:border-red-500"
               placeholder="Breve descripción de la película..."
             ></textarea>
           </div>
@@ -119,9 +132,12 @@ const MovieForm: React.FC = () => {
           {/* Botón */}
           <button
             type="submit"
-            className="mt-4 w-full p-3 bg-red-600 hover:bg-red-700 transition text-white text-lg font-semibold rounded-lg shadow-md"
+            className={`mt-4 w-full p-3 text-white text-lg font-semibold rounded-lg shadow-md transition ${
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+            }`}
+            disabled={loading}
           >
-            ➕ Agregar Película
+            {loading ? "⏳ Agregando..." : "➕ Agregar Película"}
           </button>
 
         </form>
