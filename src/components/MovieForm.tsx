@@ -31,7 +31,9 @@ const MovieForm: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://jcancelo.dev/api/add_pelicula.php", formData);
+      const response = await axios.post("https://cinesur.vercel.app/api/add_pelicula.php", formData)
+      
+
       setMensaje(response.data.message || "✅ Película agregada correctamente.");
       setFormData({ titulo: "", anio: "", imagen: "", video: "", sinopsis: "" }); // Limpiar formulario
     } catch (error) {

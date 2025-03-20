@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/:path*",
+        "destination": "http://jcancelo.dev/api/:path*"
+      }
+    ]
+  }
