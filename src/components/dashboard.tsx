@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
           <span className="text-lg font-semibold">📽️ Ver Películas</span>
         </Link>
 
-        <Link to="/admin" className="flex items-center gap-4 p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+        <Link to="/admin/agregar" className="flex items-center gap-4 p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
           <FaPlusCircle className="text-2xl text-red-600" />
           <span className="text-lg font-semibold">➕ Agregar Película</span>
         </Link>

@@ -7,6 +7,7 @@ import MovieList from "./components/MovieList";
 import MoviePlayer from "./components/MoviePlayer";
 import AdminPage from "./pages/AdminPage";
 import Dashboard from "./components/Dashboard";
+import MovieForm from "./components/MovieForm"; // 📌 Importa el formulario
 
 interface Movie {
   id: number;
@@ -32,12 +33,13 @@ const App: React.FC = () => {
       <div className={`${isMobile ? "bg-white text-gray-900" : "bg-gray-100 text-gray-900"}`}>
         <Navbar />
         <div className={`p-4 ${isMobile ? "max-w-full mx-auto mt-16" : "max-w-lg mx-auto mt-20"}`}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/peliculas" element={<MovieList movies={movies} />} />
-            <Route path="/pelicula/:id" element={<MoviePlayer movies={movies} />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Routes>
+        <Routes>
+  <Route path="/" element={<Dashboard />} />
+  <Route path="/peliculas" element={<MovieList movies={movies} />} />
+  <Route path="/pelicula/:id" element={<MoviePlayer movies={movies} />} />
+  <Route path="/admin" element={<AdminPage />} />
+  <Route path="/admin/agregar" element={<MovieForm />} /> {/* ✅ Asegúrate de que esta línea está */}
+</Routes>
         </div>
       </div>
     </Router>
