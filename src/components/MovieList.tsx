@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { Link } from "react-router-dom"; // ✅ Usado correctamente en los botones
 
 interface Movie {
   id: number;
@@ -10,47 +10,26 @@ interface Movie {
   sinopsis: string;
 }
 
-const MovieList: React.FC = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+interface MovieListProps { // ✅ Definir el tipo de `movies`
+  movies: Movie[];
+}
 
-  useEffect(() => {
-    axios.get("https://jcancelo.dev/api/get_peliculas.php")
-      .then(response => {
-        console.log("📽️ Datos recibidos de la API:", response.data); // 🔹 Verifica qué devuelve la API
-        if (response.data.success) {
-          setMovies(response.data.data);
-        } else {
-          setError("❌ No se encontraron películas.");
-        }
-      })
-      .catch(error => {
-        console.error("❌ Error en la solicitud:", error);
-        setError("❌ No se pudo conectar con el servidor.");
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return <p className="text-center text-lg text-gray-500">🔄 Cargando películas...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
-  }
-
+const MovieList: React.FC<MovieListProps> = ({ movies }) => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h2 className="text-3xl font-bold text-center text-red-600 mb-6">🎬 Películas Disponibles</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {movies.map((movie) => (
-          <div key={movie.id} className="bg-white p-4 rounded-lg shadow-md">
-            <img src={movie.imagen} alt={movie.titulo} className="w-full h-64 object-cover rounded-lg" />
-            <h3 className="text-lg font-semibold mt-2">{movie.titulo}</h3>
-            <p className="text-gray-500 text-sm">{movie.anio}</p>
-          </div>
-        ))}
+        {movies.length === 0 ? (
+          <p className="text-center text-gray-500">❌ No hay películas disponibles.</p>
+        ) : (
+          movies.map((movie) => (
+            <Link key={movie.id} to={`/pelicula/${movie.id}`} className="bg-white p-4 rounded-lg shadow-md">
+              <img src={movie.imagen} alt={movie.titulo} className="w-full h-64 object-cover rounded-lg" />
+              <h3 className="text-lg font-semibold mt-2">{movie.titulo}</h3>
+              <p className="text-gray-500 text-sm">{movie.anio}</p>
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );
