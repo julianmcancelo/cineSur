@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaFilm, FaPlusCircle, FaUsers } from "react-icons/fa";
+import { FaFilm, FaUsers } from "react-icons/fa";
 
 const AdminPage: React.FC = () => {
   return (
